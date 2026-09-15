@@ -24,7 +24,41 @@ pipeline {
             steps {
                 bat 'docker build --tag devops-demo:%BUILD_NUMBER% .'
             }
-}
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKERHUB_USERNAME',
+                        passwordVariable: 'DOCKERHUB_TOKEN'
+                    )
+                ]) {
+                    script {
+                        try {
+                            bat '''
+                                @echo off
+                                echo %DOCKERHUB_TOKEN%| docker login --username %DOCKERHUB_USERNAME% --password-stdin
+                            '''
+
+                            bat '''
+                                docker tag devops-demo:%BUILD_NUMBER% %DOCKERHUB_USERNAME%/devops-demo:%BUILD_NUMBER%
+                            '''
+
+                            bat '''
+                                docker push %DOCKERHUB_USERNAME%/devops-demo:%BUILD_NUMBER%
+                            '''
+                        } finally {
+                            bat(
+                                returnStatus: true,
+                                script: 'docker logout'
+                            )
+                        }
+                    }
+                }
+            }
+        }
 
         stage('Archive JAR') {
             steps {
