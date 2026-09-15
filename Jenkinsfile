@@ -20,11 +20,11 @@ pipeline {
             }
         }
 
-        stage('Docker Check') {
+        stage('Build Docker Image') {
             steps {
-        bat 'docker version'
+                bat 'docker build --tag devops-demo:%BUILD_NUMBER% .'
             }
-        }
+}
 
         stage('Archive JAR') {
             steps {
