@@ -39,7 +39,7 @@ pipeline {
                         try {
                             bat '''
                                 @echo off
-                                echo %DOCKERHUB_TOKEN% | docker login --username %DOCKERHUB_USERNAME% --password-stdin
+                                echo %DOCKERHUB_TOKEN%| docker login --username %DOCKERHUB_USERNAME% --password-stdin
                             '''
 
                             bat '''
