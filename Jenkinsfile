@@ -20,6 +20,12 @@ pipeline {
             }
         }
 
+        stage('Docker Check') {
+            steps {
+        bat 'docker version'
+            }
+        }
+
         stage('Archive JAR') {
             steps {
                 archiveArtifacts(
