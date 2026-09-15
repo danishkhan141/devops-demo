@@ -20,6 +20,12 @@ pipeline {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build --tag devops-demo:%BUILD_NUMBER% .'
+            }
+}
+
         stage('Archive JAR') {
             steps {
                 archiveArtifacts(
