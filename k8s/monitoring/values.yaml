@@ -1,0 +1,73 @@
+# Lightweight kube-prometheus-stack configuration for a local Minikube cluster.
+# Chart version used with these values: kube-prometheus-stack 91.4.1
+
+# Start without the large bundle of preconfigured Kubernetes alert rules.
+# We will add focused alerting rules later while learning Alertmanager.
+defaultRules:
+  create: false
+
+# Alert delivery is a separate learning step. Disabling it initially saves memory.
+alertmanager:
+  enabled: false
+
+# These control-plane components are not useful scrape targets in our
+# single-node Minikube lab and commonly appear as unavailable targets.
+kubeControllerManager:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+grafana:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 384Mi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+prometheus:
+  prometheusSpec:
+    # One day is sufficient for local exercises and reduces storage growth.
+    retention: 1d
+    scrapeInterval: 30s
+    evaluationInterval: 30s
+    resources:
+      requests:
+        cpu: 150m
+        memory: 384Mi
+      limits:
+        cpu: 500m
+        memory: 768Mi
+
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 96Mi
